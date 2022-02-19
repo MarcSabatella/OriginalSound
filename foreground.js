@@ -21,14 +21,18 @@ var originalSoundDialogHTML = "\
 ";
 
 function initOriginalSoundDialog () {
-  if (originalSoundDialog)
+  if (originalSoundDialog) {
     return;
-  originalSoundDialog = document.createElement("dialog");
-  originalSoundDialog.innerHTML = originalSoundDialogHTML;
-  document.body.append(originalSoundDialog);
-  echoButton = document.querySelector("#cancelecho");
-  voiceButton = document.querySelector("#optimizevoice");
-  closeButton = document.querySelector("#oa-close");
+  }
+  var td = window.top.document;
+  if (window.location == window.parent.location) {
+    originalSoundDialog = td.createElement("dialog");
+    originalSoundDialog.innerHTML = originalSoundDialogHTML;
+    td.body.append(originalSoundDialog);
+  }
+  echoButton = td.querySelector("#cancelecho");
+  voiceButton = td.querySelector("#optimizevoice");
+  closeButton = td.querySelector("#os-close");
   closeButton.addEventListener("click", function() { originalSoundDialog.close(); });
 }
 
@@ -57,7 +61,9 @@ function replaceUserMedia () {
     nmd.getUserMedia = newUserMedia;
 
   }
-  originalSoundDialog.show();
+  if (window.location == window.parent.location) {
+    originalSoundDialog.show();
+  }
   console.log(nmd.getUserMedia);
   console.log("replaceUserMedia completed");
 }

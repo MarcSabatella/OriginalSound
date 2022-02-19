@@ -1,5 +1,4 @@
-# OriginalSound
-Original Sound
+# Original Sound
 
 Original Sound allows you to disable the default audio input processing
 that is performed by the Zoom PWA and other web-based applications.
@@ -8,7 +7,7 @@ but disastrous for music.
 Two separate controls are included:
 one for echo cancellation,
 and one for other other voice optimizations
-including auto gain control and noise supression.
+(including auto gain control and noise supression).
 
 Note: in order for the settings to take effect,
 you will need to change audio devices,
