@@ -9,15 +9,15 @@ var originalSoundElementHTML = "\
 <div class='audio-options'>\
   <h3>Original Sound</h3>\
   <p>Settings take effect on device change</p>\
-  <div>\
+  <div style='margin-top: 4px; margin-bottom: 4px;'>\
     <input type='checkbox' id='cancelecho' name='cancelecho' checked>\
-    <label for='cancelecho'>Cancel echo</label>\
+    <label for='cancelecho' style='display: inline; margin-left: 8px'>Cancel echo</label>\
   </div>\
-  <div>\
+  <div style='margin-top: 4px; margin-bottom: 4px;'>\
     <input type='checkbox' id='optimizevoice' name='optimizevoice' checked>\
-    <label for='optimizevoice'>Optimize for voice</label>\
+    <label for='optimizevoice' style='display: inline; margin-left: 8px;'>Optimize for voice</label>\
   </div>\
-  <button id='os-close'>Close</button>\
+  <button id='os-close' style='margin-top: 8px;'>Close</button>\
 </div>\
 ";
 
