@@ -4,7 +4,8 @@ var voiceButton;
 var closeButton;
 
 var originalSoundDialog;
-var originalSoundDialogHTML = "\
+var originalSoundElement;
+var originalSoundElementHTML = "\
 <div class='audio-options'>\
   <h3>Original Sound</h3>\
   <p>Settings take effect on device change</p>\
@@ -27,27 +28,30 @@ function initOriginalSoundDialog () {
   var td = window.top.document;
   if (window.location == window.parent.location) {
     originalSoundDialog = td.createElement("dialog");
-    originalSoundDialog.innerHTML = originalSoundDialogHTML;
+    originalSoundDialog.setAttribute("style", "position: absolute; top: 0; left: 0; z-index: 9999");
+    originalSoundElement = originalSoundDialog;
+    originalSoundElement.innerHTML = originalSoundElementHTML;
     td.body.append(originalSoundDialog);
   }
   echoButton = td.querySelector("#cancelecho");
   voiceButton = td.querySelector("#optimizevoice");
   closeButton = td.querySelector("#os-close");
-  closeButton.addEventListener("click", function() { originalSoundDialog.close(); });
+  closeButton.addEventListener("click", function() { if (originalSoundDialog) { originalSoundDialog.close(); } });
 }
 
 var oldUserMedia;
 
 function newUserMedia (c) {
   console.log("newUserMedia");
+  console.log("before: " + JSON.stringify(c));
   if (c.audio) {
     const echo = echoButton.checked;
     const voice = voiceButton.checked;
     c.audio.echoCancellation = echo;
-    c.audio.autoGainGontrol = voice;
-    c.audio.noisesuppression = voice;
-    console.log(JSON.stringify(c));
+    c.audio.autoGainControl = voice;
+    c.audio.noiseSuppression = voice;
   }
+  console.log("after: " + JSON.stringify(c));
   return oldUserMedia(c);
 }
 
@@ -59,7 +63,6 @@ function replaceUserMedia () {
   if (!oldUserMedia) {
     oldUserMedia = nmd.getUserMedia.bind(navigator.mediaDevices);
     nmd.getUserMedia = newUserMedia;
-
   }
   if (window.location == window.parent.location) {
     originalSoundDialog.show();
