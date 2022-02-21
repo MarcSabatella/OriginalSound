@@ -5,21 +5,6 @@ var closeButton;
 
 var originalSoundDialog;
 var originalSoundElement;
-var originalSoundElementHTML = "\
-<div class='audio-options'>\
-  <h3>Original Sound</h3>\
-  <p>Settings take effect on device change</p>\
-  <div style='margin-top: 4px; margin-bottom: 4px;'>\
-    <input type='checkbox' id='cancelecho' name='cancelecho' checked>\
-    <label for='cancelecho' style='display: inline; margin-left: 8px'>Cancel echo</label>\
-  </div>\
-  <div style='margin-top: 4px; margin-bottom: 4px;'>\
-    <input type='checkbox' id='optimizevoice' name='optimizevoice' checked>\
-    <label for='optimizevoice' style='display: inline; margin-left: 8px;'>Optimize for voice</label>\
-  </div>\
-  <button id='os-close' style='margin-top: 8px;'>Close</button>\
-</div>\
-";
 
 function initOriginalSoundDialog () {
   if (originalSoundDialog) {
@@ -30,7 +15,43 @@ function initOriginalSoundDialog () {
     originalSoundDialog = td.createElement("dialog");
     originalSoundDialog.setAttribute("style", "position: absolute; top: 0; left: 0; z-index: 9999");
     originalSoundElement = originalSoundDialog;
-    originalSoundElement.innerHTML = originalSoundElementHTML;
+    // Google Meet uses TrustedHTML, so we cannot use innerHTML
+    // instead, build the dialog programmatically
+    const h = td.createElement("h3");
+    const p = td.createElement("p");
+    const d = td.createElement("div");
+    const d1 = td.createElement("div");
+    const i1 = td.createElement("input");
+    const l1 = td.createElement("label");
+    const d2 = td.createElement("div");
+    const i2 = td.createElement("input");
+    const l2 = td.createElement("label");
+    const b = td.createElement("button");
+    h.innerText = "Original Sound";
+    p.innerText = "Settings take effect on device change";
+    d1.setAttribute("style", "margin-top: 4px; margin-button: 4px;");
+    i1.setAttribute("type", "checkbox");
+    i1.setAttribute("id", "cancelecho");
+    i1.setAttribute("name", "cancelecho");
+    i1.setAttribute("checked", true);
+    l1.setAttribute("for", "cancelecho");
+    l1.setAttribute("style", "display: inline; margin-left: 8px;");
+    l1.innerText = "Cancel echo";
+    d2.setAttribute("style", "margin-top: 4px; margin-button: 4px;");
+    i2.setAttribute("type", "checkbox");
+    i2.setAttribute("id", "optimizevoice");
+    i2.setAttribute("name", "optimizevoice");
+    i2.setAttribute("checked", true);
+    l2.setAttribute("for", "optimizevoice");
+    l2.setAttribute("style", "display: inline; margin-left: 8px;");
+    l2.innerText = "Optimize for voice";
+    b.setAttribute("id", "os-close");
+    b.setAttribute("style", "margin-top: 8px;");
+    b.innerText = "Close";
+    d1.append(i1, l1);
+    d2.append(i2, l2);
+    d.append(d1, d2);
+    originalSoundDialog.append(h, p, d, b);
     td.body.append(originalSoundDialog);
   }
   echoButton = td.querySelector("#cancelecho");
@@ -47,9 +68,15 @@ function newUserMedia (c) {
   if (c.audio) {
     const echo = echoButton.checked;
     const voice = voiceButton.checked;
-    c.audio.echoCancellation = echo;
-    c.audio.autoGainControl = voice;
-    c.audio.noiseSuppression = voice;
+    if (c.audio.mandatory || c.audio.optional) {
+      c.audio.mandatory.echoCancellation = echo;
+      c.audio.mandatory.googAutoGainControl = voice;
+      c.audio.mandatory.googNoiseSuppression = voice;
+    } else {
+      c.audio.echoCancellation = echo;
+      c.audio.autoGainControl = voice;
+      c.audio.noiseSuppression = voice;
+    }
   }
   console.log("after: " + JSON.stringify(c));
   return oldUserMedia(c);
