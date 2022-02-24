@@ -2,7 +2,7 @@
 {
   "manifest_version": 3,
   "name": "Original Sound",
-  "version": "1.0",
+  "version": "1.0.1",
   "description": "This extension provides controls for audio input processing",
   "author": "Marc Sabatella",
   "homepage_url": "https://github.com/MarcSabatella/OriginalSound",
